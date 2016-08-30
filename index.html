@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="jquery-1.12.4.min.js"></script>
+    <style>
+        div{
+            width: 1000px;
+            height: 600px;
+            margin: 0 auto;
+            position: relative;
+            border: 1px solid #cccccc;
+            background-color: #eeeeee;
+        }
+        span{
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            background-color: greenyellow;
+            border: 1px solid lightblue;
+            border-radius: 50%;
+            position: absolute;
+            right: 50%;
+            bottom: 0;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <span></span>
+    </div>
+</body>
+<script>
+    //点击移动
+    $('div').mousedown(function(){
+        $('span').stop();
+        $(this).mousemove(function(e){
+            var x = e.pageX - $(this).offset().left;
+            var y = e.pageY - $(this).offset().top;
+            var mx = Math.round( x - $('span').width()/2);
+            var my = Math.round(y - $('span').height()/2);
+            $('span').css({
+                'left': mx,
+                'bottom': 500-my
+            });
+        })
+    });
+    $('span').mouseup(function(){
+        $('div').unbind('mousemove');
+        var span_top = $('span').css('bottom').replace(/px/g,'');
+        function func(){
+            var time = Math.sqrt(span_top)*40;
+            if(span_top >5){
+                $('span').animate({bottom:0},time,'swing',function(){
+                    if($('span').css('bottom') == 0+'px'){
+                        $('span').animate({bottom:span_top*0.7},time,'swing',function(){
+                            span_top = span_top*0.7;
+                            func()
+                        })
+                    }
+                });
+            }
+            if(span_top<5){
+                $('span').animate({bottom:0},time,'swing')
+            }
+        }
+        func()
+    })
+</script>
+</html>
